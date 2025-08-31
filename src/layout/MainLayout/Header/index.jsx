@@ -6,12 +6,12 @@ import { LogIn, UserPlus } from "lucide-react";
 const MainLayOutHeader = () => {
   return (
     <>
-      <Header>
+      <Header className="bg-primary/5 backdrop-blur">
         <nav className="h-16 max-w-1440 mx-auto flex justify-between items-center">
           {/* 네비바 좌측 */}
           <div className="flex justify-between items-center gap-8">
             <Link to="/">
-              <div className="text-primary text-2xl font-bold">SEMICOLON;</div>
+              <div className="text-primary text-2xl font-bold">semicolon;</div>
             </Link>
             <div>
               <ul className="flex gap-8 font-medium text-sm">

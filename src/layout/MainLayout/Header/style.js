@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Header = styled.header`
-  position: fixed;
+  position: sticky;
   width: 100%;
-  height: 70px;
+  border-bottom: 1px solid var(--gray-70);
 `;

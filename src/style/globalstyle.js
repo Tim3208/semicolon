@@ -21,9 +21,6 @@ const GlobalStyle = createGlobalStyle`
       --blue-light-1: #7499EB;
       --blue-light-2: #EFF6FF;
 
-      /* 배경 색상 */
-      --main-page-bg: #F9FAFB;
-
       /* 포인트 그린 */
       --green-accent: #22C55E;
 
@@ -40,6 +37,29 @@ const GlobalStyle = createGlobalStyle`
 
       /* Footer Background Color */
       --navy: #111827;
+
+      --foreground: oklch(0.25 0 0); /* #374151 */
+      --card: oklch(0.99 0.02 85); /* #fefce8 */
+      --card-foreground: oklch(0.25 0 0); /* #374151 */
+      --primary: oklch(0.65 0.15 70); /* #d97706 */
+      --secondary: oklch(0.75 0.12 85); /* #f59e0b */
+      --muted: oklch(0.99 0.02 85); /* #fefce8 */
+      --destructive: oklch(0.55 0.22 25); /* #dc2626 */
+      --border: oklch(0.92 0 0); /* #e5e7eb */
+      --input: oklch(0.99 0.02 85); /* #fefce8 */
+      --ring: oklch(0.65 0.15 70); /* #d97706 */
+      --chart-1: oklch(0.65 0.15 70); /* #d97706 */
+      --chart-2: oklch(0.75 0.12 85); /* #f59e0b */
+      --chart-3: oklch(0.25 0 0); /* #374151 */
+      --chart-4: oklch(0.99 0.02 85); /* #fefce8 */
+      --chart-5: oklch(0.55 0.22 25); /* #dc2626 */
+      --sidebar: oklch(0.99 0.02 85); /* #fefce8 */
+      --sidebar-foreground: oklch(0.25 0 0); /* #374151 */
+      --sidebar-primary: oklch(0.65 0.15 70); /* #d97706 */
+      --sidebar-accent: oklch(0.75 0.12 85); /* #f59e0b */
+      --sidebar-accent-foreground: oklch(1 0 0); /* #ffffff */
+      --sidebar-border: oklch(0.92 0 0); /* #e5e7eb */
+      --sidebar-ring: oklch(0.65 0.15 70); /* #d97706 */
     }
 
 

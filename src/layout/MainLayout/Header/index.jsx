@@ -6,7 +6,7 @@ import { LogIn, UserPlus } from "lucide-react";
 const MainLayOutHeader = () => {
   return (
     <>
-      <Header className="bg-primary/5 backdrop-blur">
+      <Header className="backdrop-blur">
         <nav className="h-16 max-w-1440 mx-auto flex justify-between items-center">
           {/* 네비바 좌측 */}
           <div className="flex justify-between items-center gap-8">
@@ -18,7 +18,7 @@ const MainLayOutHeader = () => {
                 <Link to="/">
                   <li className="hover:text-primary">홈</li>
                 </Link>
-                <Link to="/">
+                <Link to="/organization">
                   <li className="hover:text-primary">학회 조직도</li>
                 </Link>
                 <Link to="/">

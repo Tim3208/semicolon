@@ -3,64 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "./style";
 import { Mail, GithubIcon, Phone } from "lucide-react";
 import { useState } from "react";
-
-const member = [
-  {
-    id: 1,
-    name: "윤소영",
-    position: "학회장",
-    department: "",
-    email: "example@gmail.com",
-    phone: "010-1234-5678",
-    github: "",
-    description: "안녕하세요 학생회장입니다 ㅎㅎ ㅋ",
-    avatar: "",
-  },
-  {
-    id: 2,
-    name: "오금서",
-    position: "기획부장",
-    department: "기획부",
-    email: "example@gmail.com",
-    phone: "010-1234-5678",
-    github: "",
-    description: "안녕하세요 기획부장입니다 ㅎㅎ ㅋ",
-    avatar: "",
-  },
-  {
-    id: 3,
-    name: "김유민",
-    position: "홍보부장",
-    department: "홍보부",
-    email: "example@gmail.com",
-    phone: "010-1234-5678",
-    github: "어쩌고 저쩌고 주소",
-    description: "히히 발싸",
-    avatar: "",
-  },
-  {
-    id: 4,
-    name: "최혜영",
-    position: "총무부장",
-    department: "총무부",
-    email: "example@gmail.com",
-    phone: "010-1234-5678",
-    github: "어쩌고 저쩌고 주소",
-    description: "ㅎ2ㅇ",
-    avatar: "",
-  },
-  {
-    id: 5,
-    name: "김현욱",
-    position: "체육부장",
-    department: "체육부",
-    email: "example@gmail.com",
-    phone: "010-1234-5678",
-    github: "",
-    description: "옷 오오옷",
-    avatar: "",
-  },
-];
+import { member } from "@/_dummyData/memberData";
 
 const leaders = member.filter(
   (m) => m.position.endsWith("부장") || m.position === "학회장"
@@ -68,6 +11,7 @@ const leaders = member.filter(
 const staffs = member.filter(
   (m) => m.position && !m.position.endsWith("부장") && m.position !== "학회장"
 );
+
 /**
  * 학회원 Card 컴포넌트
  * @param {Object} member - 멤버 정보 객체

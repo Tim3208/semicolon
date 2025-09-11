@@ -1,13 +1,15 @@
 import MainLayOut from "@/layout/MainLayout";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "./style";
-import { Mail, GithubIcon, Phone } from "lucide-react";
+import { Mail, BookUser, Phone, Github } from "lucide-react";
 import { useState } from "react";
 import { member } from "@/_dummyData/memberData";
 
-const leaders = member.filter(
-  (m) => m.position.endsWith("부장") || m.position === "학회장"
-);
+const boss = member.filter((m) => m.position === "학회장");
+
+const leaders = member.filter((m) => m.position.endsWith("부장"));
+
 const staffs = member.filter(
   (m) => m.position && !m.position.endsWith("부장") && m.position !== "학회장"
 );
@@ -43,9 +45,13 @@ const CardCP = ({ member }) => {
           <Phone />
           {member.phone || "전화번호 정보를 제공할 수 없습니다."}
         </p>
+        <p>
+          <BookUser />
+          {member.sid || "학번 정보를 제공할 수 없습니다."}
+        </p>
         {member.github && (
-          <p href={member.github} target="_blank" rel="noreferrer">
-            <GithubIcon />
+          <p href={member.github}>
+            <Github />
             {member.github}
           </p>
         )}
@@ -54,21 +60,64 @@ const CardCP = ({ member }) => {
   );
 };
 
-/**
- * 축소형 학회원 Card 컴포넌트
- * @param {Object} member - 멤버 정보 객체
- * @returns {JSX.Element} Card 컴포넌트
+/** 부서별 부장/부원 추출 함수
+ * @param {string} deptName 기획/홍보/총무/체육 을 str로 받음
+ * @returns {Object} {head, staffs} 전달받은 부서의 부서장과 부서원들을 뱉음
  */
-const SmallCardCP = ({ member }) => {
+const getDeptData = (deptName) => {
+  const head = member.find((m) => m.position === `${deptName}부장`);
+  const staffs = member.filter(
+    (m) => m.department === `${deptName}부` && !m.position.endsWith("부장")
+  );
+  return { head, staffs };
+};
+
+/**
+ * Card 컴포넌트 부서별로 보여주는 컴포넌트
+ * @param {Object} member - 멤버 정보 객체
+ */
+const CardLayoutCP = ({ member, head, staffs }) => {
   return (
     <>
-      <></>
+      <section className="flex flex-col gap-16 items-center mt-12">
+        {head && (
+          <div className="flex flex-col gap-8 items-center">
+            <h2 className="text-2xl font-bold">{head.position}</h2>
+            <CardCP member={head} />
+          </div>
+        )}
+        {staffs && staffs.length > 0 && (
+          <div className="flex flex-col gap-8 items-center">
+            {head.position === "학회장" ? (
+              <h2 className="text-2xl font-bold">임원</h2>
+            ) : (
+              <h2 className="text-2xl font-bold">부원</h2>
+            )}
+            <div className="flex flex-wrap gap-8 justify-center">
+              {staffs.map((m) => (
+                <CardCP key={m.id} member={m} />
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
     </>
   );
 };
 
 function OrganizationPage() {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  //부서별 부장&부원 데이터
+  const planningDept = getDeptData("기획");
+  const prDept = getDeptData("홍보");
+  const financeDept = getDeptData("총무");
+  const sportDept = getDeptData("체육");
+
+  // 임원진(학회장 + 부장들)
+  const president = member.find((m) => m.position === "학회장");
+  const heads = member.filter((m) => m.position.endsWith("부장"));
+
   return (
     <MainLayOut>
       <div className="flex justify-center items-center w-full">
@@ -81,48 +130,68 @@ function OrganizationPage() {
             </p>
           </div>
 
-          <button
-            onClick={() => setIsExpanded((prev) => !prev)}
-            aria-label={isExpanded ? "목록 접기" : "목록 펼치기"}
-          >
-            {isExpanded ? "−" : "+"}
-          </button>
-
-          {isExpanded && (
-            <div className="cardsContainer">
-              {member.map((m) => (
-                <SmallCardCP key={m.id} member={m} />
-              ))}
-            </div>
-          )}
-
           {/* 학회 조직도 Cards */}
-          <section className="flex flex-col gap-16 items-center mt-12">
-            <div className="flex flex-col gap-8 items-center">
-              <h2 className="text-2xl font-bold">임원진</h2>
-              <CardCP member={member[0]} />
-            </div>
-            <div className="flex flex-col gap-8 items-center">
-              <h2 className="text-2xl font-bold">부서장</h2>
-              <div className="flex flex-wrap gap-8 justify-center">
-                <CardCP member={member[1]} />
-                <CardCP member={member[2]} />
-                <CardCP member={member[3]} />
-                <CardCP member={member[4]} />
-              </div>
-            </div>
-            <div className="flex flex-col gap-8 items-center">
-              <h2 className="text-2xl font-bold">부서원</h2>
-              <div className="flex flex-wrap gap-8 justify-center">
-                {staffs.map((m) => (
-                  <CardCP key={m.id} member={m} />
-                ))}
-              </div>
-            </div>
-          </section>
+          <Tabs
+            defaultValue="leader"
+            className="mt-16 flex flex-col justify-center"
+          >
+            <TabsList className="bg-white flex gap-2">
+              <TabsTrigger
+                className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+                value="leader"
+              >
+                임원진
+              </TabsTrigger>
+              <TabsTrigger
+                className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+                value="planningDept"
+              >
+                기획부
+              </TabsTrigger>
+              <TabsTrigger
+                className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+                value="prDept"
+              >
+                홍보부
+              </TabsTrigger>
+              <TabsTrigger
+                className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+                value="financeDept"
+              >
+                총무부
+              </TabsTrigger>
+              <TabsTrigger
+                className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+                value="sportDept"
+              >
+                체육부
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="leader">
+              <CardLayoutCP head={president} staffs={heads} />
+            </TabsContent>
+            <TabsContent value="planningDept">
+              <CardLayoutCP
+                head={planningDept.head}
+                staffs={planningDept.staffs}
+              />
+            </TabsContent>
+            <TabsContent value="prDept">
+              <CardLayoutCP head={prDept.head} staffs={prDept.staffs} />
+            </TabsContent>
+            <TabsContent value="financeDept">
+              <CardLayoutCP
+                head={financeDept.head}
+                staffs={financeDept.staffs}
+              />
+            </TabsContent>
+            <TabsContent value="sportDept">
+              <CardLayoutCP head={sportDept.head} staffs={sportDept.staffs} />
+            </TabsContent>
+          </Tabs>
 
           {/* 조직 구조도 */}
-          <section className="mt-16 py-8 mx-4 md:mx-0 bg-orange-100 rounded-lg">
+          <section className="mt-32 py-8 mx-4 md:mx-0 bg-orange-100 rounded-lg">
             <h2 className="text-2xl font-bold text-center ">조직 구조</h2>
             <div className="rounded-lg p-8">
               <div className="flex flex-col items-center space-y-8">

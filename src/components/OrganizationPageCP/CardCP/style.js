@@ -45,7 +45,6 @@ export const Card = styled.div`
   //직급 뱃지
   .position {
     background: ${(props) => {
-      console.log(`프롭: ${props}, position: ${props.position}`);
       switch (props.position) {
         case "학회장":
           return "var(--primary)";

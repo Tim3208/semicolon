@@ -21,9 +21,6 @@ const GlobalStyle = createGlobalStyle`
       --blue-light-1: #7499EB;
       --blue-light-2: #EFF6FF;
 
-      /* 배경 색상 */
-      --main-page-bg: #F9FAFB;
-
       /* 포인트 그린 */
       --green-accent: #22C55E;
 
@@ -40,6 +37,28 @@ const GlobalStyle = createGlobalStyle`
 
       /* Footer Background Color */
       --navy: #111827;
+
+      --foreground: #374151;
+      --card: #fefce8;
+      --card-foreground: #374151;
+      --primary: #d97706;
+      --secondary: #f59e0b;
+      --muted: #fefce8;
+      --destructive: #dc2626;
+      --border: #e5e7eb;
+      --input: #fefce8;
+      --ring: #d97706;
+      --chart-1: #d97706;
+      --chart-2: #f59e0b;
+      --chart-3: #374151;
+      --chart-4: #fefce8;
+      --chart-5: #dc2626;
+      --sidebar: #fefce8;
+      --sidebar-foreground: #374151;
+      --sidebar-primary: #d97706;
+      --sidebar-accent: #f59e0b;
+      --sidebar-border: #e5e7eb;
+      --sidebar-ring: #d97706;
     }
 
 

@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Search, Plus, UserCheck, UserX } from "lucide-react";
+import { Search, Plus, UserCheck, UserX, Edit } from "lucide-react";
 import MainLayOut from "@/layout/MainLayout";
 
 export default function StudentsPage() {
@@ -27,29 +27,57 @@ export default function StudentsPage() {
     amount: 280000,
   });
 
-  // 데이터 불러오기
-  const fetchStudents = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("dues_paid")
-      .select("id, name, student_id, cohort, amount")
-      .order("cohort", { ascending: false });
+  // 모달 관련 상태
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isAddEventOpen, setIsAddEventOpen] = useState(false);
 
-    if (error) console.error("Fetch Error:", error);
-    else setStudents(data);
-    setLoading(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [newEvent, setNewEvent] = useState({
+    name: "",
+    description: "",
+    date: "",
+  });
+  const [events, setEvents] = useState([]);
+
+  // 데이터 불러오기
+  const fetchAllData = async () => {
+    const { data: studentsData } = await supabase
+      .from("students")
+      .select("*")
+      .order("created_at", { ascending: true });
+    const { data: eventsData } = await supabase
+      .from("events")
+      .select("*")
+      .order("date", { ascending: true });
+    const { data: linkData } = await supabase
+      .from("student_events")
+      .select("*");
+
+    const merged = studentsData.map((s) => ({
+      ...s,
+      events: Object.fromEntries(
+        eventsData.map((ev) => [
+          ev.id,
+          linkData.find((l) => l.student_id === s.id && l.event_id === ev.id)
+            ?.is_winner || false,
+        ])
+      ),
+    }));
+
+    setStudents(merged);
+    setEvents(eventsData);
   };
 
   useEffect(() => {
-    fetchStudents();
+    fetchAllData();
   }, []);
 
-  // 학생 추가
+  /** 학생 추가 */
   const handleAddStudent = async () => {
     if (!newStudent.name || !newStudent.student_id)
       return alert("이름과 학번은 필수입니다!");
 
-    const { error } = await supabase.from("dues_paid").insert([
+    const { error } = await supabase.from("students").insert([
       {
         name: newStudent.name,
         student_id: newStudent.student_id,
@@ -65,8 +93,64 @@ export default function StudentsPage() {
       alert("학생이 추가되었습니다.");
       setNewStudent({ name: "", student_id: "", cohort: "", amount: 280000 });
       setIsAddingStudent(false);
-      fetchStudents();
+      fetchAllData();
     }
+  };
+
+  /** 이벤트 추가 */
+  const handleAddEvent = async () => {
+    if (!newEvent.name) return alert("이벤트 이름을 입력하세요.");
+
+    const { data: event, error } = await supabase
+      .from("events")
+      .insert([
+        {
+          name: newEvent.name,
+          description: newEvent.description,
+          date: newEvent.date,
+        },
+      ])
+      .select()
+      .single();
+
+    if (error) return alert("이벤트 추가 실패");
+
+    // 모든 학생에게 기본 is_winner = false 설정
+    const inserts = students.map((s) => ({
+      student_id: s.id,
+      event_id: event.id,
+      is_winner: false,
+    }));
+    await supabase.from("student_events").insert(inserts);
+
+    setIsAddEventOpen(false);
+    setNewEvent({ name: "", description: "", date: "" });
+    fetchAllData(); // 다시 불러오기
+  };
+
+  /** 저장함수 */
+  const handleSaveStudent = async () => {
+    const s = selectedStudent;
+
+    // 1️⃣ 학회비 금액 업데이트
+    await supabase.from("students").update({ amount: s.amount }).eq("id", s.id);
+
+    // 2️⃣ 이벤트 당첨 상태 업데이트
+    const updates = Object.entries(s.events || {}).map(
+      ([eventId, isWinner]) => ({
+        student_id: s.id,
+        event_id: eventId,
+        is_winner: isWinner,
+      })
+    );
+
+    await supabase
+      .from("student_events")
+      .upsert(updates, { onConflict: ["student_id", "event_id"] });
+
+    setIsEditOpen(false);
+    setSelectedStudent(null);
+    fetchAllData();
   };
 
   // ✅ 검색 필터
@@ -192,6 +276,53 @@ export default function StudentsPage() {
               </div>
             </DialogContent>
           </Dialog>
+          {/* 이벤트 추가 */}
+          <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <Plus className="w-4 h-4 mr-2" />
+                이벤트 추가
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>새 이벤트 추가</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label>이벤트 이름</Label>
+                  <Input
+                    value={newEvent.name}
+                    onChange={(e) =>
+                      setNewEvent({ ...newEvent, name: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <Label>설명</Label>
+                  <Input
+                    value={newEvent.description}
+                    onChange={(e) =>
+                      setNewEvent({ ...newEvent, description: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <Label>날짜</Label>
+                  <Input
+                    type="date"
+                    value={newEvent.date}
+                    onChange={(e) =>
+                      setNewEvent({ ...newEvent, date: e.target.value })
+                    }
+                  />
+                </div>
+                <Button onClick={handleAddEvent} className="w-full">
+                  추가하기
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </section>
 
         {/* 학생 리스트 */}
@@ -232,6 +363,16 @@ export default function StudentsPage() {
                       </>
                     )}
                   </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedStudent(student);
+                      setIsEditOpen(true);
+                    }}
+                  >
+                    <Edit className="w-4 h-4" />
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -243,6 +384,61 @@ export default function StudentsPage() {
             <p className="text-muted-foreground">검색 결과가 없습니다.</p>
           </div>
         )}
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent>
+            {selectedStudent && (
+              <>
+                <DialogHeader>
+                  <DialogTitle>{selectedStudent.name} 정보 수정</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6">
+                  <div>
+                    <Label className="font-semibold">학회비 납부 상태</Label>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Checkbox
+                        checked={selectedStudent.amount > 0}
+                        onCheckedChange={(checked) =>
+                          setSelectedStudent({
+                            ...selectedStudent,
+                            amount: checked ? 280000 : 0,
+                          })
+                        }
+                      />
+                      <Label>납부 완료</Label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="font-semibold">이벤트 당첨 상태</Label>
+                    <div className="space-y-2 mt-2">
+                      {events.map((ev) => (
+                        <div key={ev.id} className="flex items-center gap-2">
+                          <Checkbox
+                            checked={selectedStudent.events?.[ev.id] || false}
+                            onCheckedChange={(checked) =>
+                              setSelectedStudent({
+                                ...selectedStudent,
+                                events: {
+                                  ...selectedStudent.events,
+                                  [ev.id]: checked,
+                                },
+                              })
+                            }
+                          />
+                          <Label>{ev.name}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Button onClick={handleSaveStudent} className="w-full">
+                    저장하기
+                  </Button>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </main>
     </MainLayOut>
   );

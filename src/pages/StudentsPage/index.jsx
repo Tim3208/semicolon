@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -12,7 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Search, Plus, UserCheck, UserX, Edit } from "lucide-react";
+import { Search, Plus, UserCheck, UserX, Edit, Trophy } from "lucide-react";
 import MainLayOut from "@/layout/MainLayout";
 
 export default function StudentsPage() {
@@ -43,29 +44,16 @@ export default function StudentsPage() {
   const fetchAllData = async () => {
     const { data: studentsData } = await supabase
       .from("students")
-      .select("*")
+      .select(`*, student_events(*, events(*))`)
       .order("created_at", { ascending: true });
     const { data: eventsData } = await supabase
       .from("events")
       .select("*")
       .order("date", { ascending: true });
-    const { data: linkData } = await supabase
-      .from("student_events")
-      .select("*");
 
-    const merged = studentsData.map((s) => ({
-      ...s,
-      events: Object.fromEntries(
-        eventsData.map((ev) => [
-          ev.id,
-          linkData.find((l) => l.student_id === s.id && l.event_id === ev.id)
-            ?.is_winner || false,
-        ])
-      ),
-    }));
-
-    setStudents(merged);
+    setStudents(studentsData);
     setEvents(eventsData);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -158,7 +146,7 @@ export default function StudentsPage() {
     (s) => s.name.includes(searchTerm) || s.student_id.includes(searchTerm)
   );
 
-  const paidCount = students.filter((s) => s.amount > 0).length;
+  const paidCount = students.filter((s) => s.membership_paid == true).length;
   const totalStudents = students.length;
 
   return (
@@ -347,11 +335,13 @@ export default function StudentsPage() {
                   </div>
 
                   <Button
-                    variant={student.amount > 0 ? "default" : "destructive"}
+                    variant={
+                      student.membership_paid > 0 ? "default" : "destructive"
+                    }
                     size="sm"
                     className="min-w-[120px]"
                   >
-                    {student.amount > 0 ? (
+                    {student.membership_paid > 0 ? (
                       <>
                         <UserCheck className="w-4 h-4 mr-2" />
                         납부 완료
@@ -363,6 +353,18 @@ export default function StudentsPage() {
                       </>
                     )}
                   </Button>
+                  {student.student_events
+                    ?.filter((se) => se.is_winner)
+                    .map((se) => (
+                      <Button
+                        key={se.events.id}
+                        size="sm"
+                        className="bg-[#b8860b] hover:bg-[#b8860b]/90 text-white text-sm font-semibold flex items-center gap-1 px-4 py-2 rounded-lg"
+                      >
+                        <Trophy className="w-4 h-4" />
+                        {se.events.name} ✓
+                      </Button>
+                    ))}
                   <Button
                     variant="outline"
                     size="sm"

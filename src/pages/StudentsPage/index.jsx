@@ -323,7 +323,7 @@ export default function StudentsPage() {
                 key={student.id}
                 className="hover:shadow-md transition-shadow"
               >
-                <CardContent className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <CardContent className="p-6 flex flex-col justify-between items-start gap-4">
                   <div>
                     <h3 className="text-lg font-semibold">{student.name}</h3>
                     <p className="text-sm text-muted-foreground">
@@ -353,18 +353,20 @@ export default function StudentsPage() {
                       </>
                     )}
                   </Button>
-                  {student.student_events
-                    ?.filter((se) => se.is_winner)
-                    .map((se) => (
-                      <Button
-                        key={se.events.id}
-                        size="sm"
-                        className="bg-[#b8860b] hover:bg-[#b8860b]/90 text-white text-sm font-semibold flex items-center gap-1 px-4 py-2 rounded-lg"
-                      >
-                        <Trophy className="w-4 h-4" />
-                        {se.events.name} ✓
-                      </Button>
-                    ))}
+                  <div className="flex flex-wrap gap-2">
+                    {student.student_events
+                      ?.filter((se) => se.is_winner)
+                      .map((se) => (
+                        <Button
+                          key={se.events.id}
+                          size="sm"
+                          className="bg-[#b8860b] hover:bg-[#b8860b]/90 text-white text-sm font-semibold flex items-center gap-1 px-4 py-2 rounded-lg"
+                        >
+                          <Trophy className="w-4 h-4" />
+                          {se.events.name} ✓
+                        </Button>
+                      ))}
+                  </div>
                   <Button
                     variant="outline"
                     size="sm"

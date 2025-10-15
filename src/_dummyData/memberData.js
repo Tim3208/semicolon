@@ -7,7 +7,7 @@ export const member = [
     email: "yeojin0426@naver.com",
     phone: "010-7553-0426",
     sid: "2023100900",
-    description: "메롱",
+    description: "다 내 밑으로 집합! 아자쓰!",
     avatar: "",
     github: "",
   },

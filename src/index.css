@@ -57,6 +57,18 @@
     --chart-5: 340 75% 55%;
   }
 }
+/* ✅ shadcn UI Dialog 배경 투명 현상 수정 */
+[data-state="open"] > .fixed.inset-0.bg-black {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 50;
+}
 
 @layer base {
   * {

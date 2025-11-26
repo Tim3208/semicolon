@@ -52,17 +52,38 @@ const BudgetPage = () => {
   // Simulation State
   const [simItems, setSimItems] = useState([{ id: 1, item: "", cost: "" }]);
 
+  // Helper function to evaluate mathematical expressions
+  const evaluateExpression = (expr) => {
+    try {
+      // Remove any non-math characters except numbers, operators, parentheses, and dots
+      const sanitized = expr.replace(/[^0-9+\-*/().\s]/g, "");
+      if (!sanitized) return "";
+
+      // Use Function constructor as a safer alternative to eval
+      const result = Function(`"use strict"; return (${sanitized})`)();
+
+      // Check if result is a valid number
+      if (isNaN(result) || !isFinite(result)) return expr;
+
+      return Math.round(result).toString();
+    } catch (e) {
+      // If evaluation fails, return original expression
+      return expr;
+    }
+  };
+
   // Derived State
   const totalSpent = expenditures.reduce((acc, curr) => acc + curr.amount, 0);
   const currentBudget = initialBudget - totalSpent;
 
   const handleAddExpenditure = () => {
     if (!newExp.date || !newExp.purpose || !newExp.amount) return;
+    const evaluatedAmount = evaluateExpression(newExp.amount);
     const newItem = {
       id: Date.now(),
       date: newExp.date,
       purpose: newExp.purpose,
-      amount: parseInt(newExp.amount),
+      amount: parseInt(evaluatedAmount),
       link: newExp.link,
     };
     setExpenditures([...expenditures, newItem]);
@@ -91,17 +112,18 @@ const BudgetPage = () => {
     );
   };
 
-  const totalSimCost = simItems.reduce(
-    (acc, curr) => acc + (parseInt(curr.cost) || 0),
-    0
-  );
+  const totalSimCost = simItems.reduce((acc, curr) => {
+    const evaluatedCost = evaluateExpression(curr.cost);
+    return acc + (parseInt(evaluatedCost) || 0);
+  }, 0);
   const simulatedRemaining = currentBudget - totalSimCost;
 
   const handleAddSimToExpenditure = () => {
     const today = new Date().toISOString().split("T")[0];
-    const validItems = simItems.filter(
-      (item) => item.item.trim() && item.cost && parseInt(item.cost) > 0
-    );
+    const validItems = simItems.filter((item) => {
+      const evaluatedCost = evaluateExpression(item.cost);
+      return item.item.trim() && item.cost && parseInt(evaluatedCost) > 0;
+    });
 
     if (validItems.length === 0) return;
 
@@ -109,7 +131,7 @@ const BudgetPage = () => {
       id: Date.now() + Math.random(),
       date: today,
       purpose: item.item,
-      amount: parseInt(item.cost),
+      amount: parseInt(evaluateExpression(item.cost)),
       link: "",
     }));
 
@@ -178,8 +200,8 @@ const BudgetPage = () => {
                     <Label htmlFor="amount">금액 (원)</Label>
                     <Input
                       id="amount"
-                      type="number"
-                      placeholder="0"
+                      type="text"
+                      placeholder="0 또는 1000*8"
                       className="border-2 border-amber-300 focus:border-amber-500"
                       value={newExp.amount}
                       onChange={(e) =>
@@ -296,8 +318,8 @@ const BudgetPage = () => {
                     <div className="space-y-2 flex-1 w-full">
                       <Label>예상 금액</Label>
                       <Input
-                        type="number"
-                        placeholder="0"
+                        type="text"
+                        placeholder="0 또는 1000*8"
                         className="border-2 border-amber-300 focus:border-amber-500"
                         value={simItem.cost}
                         onChange={(e) =>

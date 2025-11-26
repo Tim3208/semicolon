@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import OrganizationPage from "./pages/OrganizationPage";
 import StudentsPage from "./pages/StudentsPage";
+import BudgetPage from "./pages/BudgetPage";
 import GlobalStyle from "./style/globalstyle";
 
 function App() {
@@ -19,6 +20,9 @@ function App() {
 
           {/* 학생 조회 */}
           <Route path="/students" element={<StudentsPage />} />
+
+          {/* 예산 관리 */}
+          <Route path="/budget" element={<BudgetPage />} />
         </Routes>
       </BrowserRouter>
     </>

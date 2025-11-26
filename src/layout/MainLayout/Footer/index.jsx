@@ -24,7 +24,7 @@ const MainLayOutFooter = () => {
               <li className="ul-title">서비스</li>
               <li>캘린더</li>
               <li>회의록</li>
-              <li>프로젝트</li>
+              <li>예산 기록</li>
             </ul>
             <ul>
               <li className="ul-title">고객지원</li>
@@ -33,17 +33,17 @@ const MainLayOutFooter = () => {
             </ul>
             <ul>
               <li className="ul-title">Front</li>
-              <a href="">
+              <a href="https://github.com/Tim3208/semicolon">
                 <li>박정우</li>
               </a>
               <a href="">
-                <li>육승민</li>
+                <li></li>
               </a>
             </ul>
             <ul>
               <li className="ul-title">Back</li>
-              <a href="">
-                <li></li>
+              <a href="https://github.com/Tim3208/semicolon">
+                <li>박정우</li>
               </a>
               <a href="">
                 <li></li>

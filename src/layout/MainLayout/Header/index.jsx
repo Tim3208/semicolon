@@ -14,7 +14,7 @@ const MainLayOutHeader = () => {
     { label: "학회 조직도", path: "/organization" },
     { label: "학생 조회", path: "/students" },
     { label: "회의록", path: "/" },
-    { label: "프로젝트", path: "/" },
+    { label: "예산관리", path: "/budget" },
   ];
 
   return (

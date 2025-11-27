@@ -1,23 +1,33 @@
 import styled from "styled-components";
 
 export const Card = styled.div`
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-  background-color: var(--card);
-  height: 460px;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 30px -10px rgba(243, 115, 53, 0.15);
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(253, 200, 48, 0.2);
+  height: 480px;
+  width: 320px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px -10px rgba(243, 115, 53, 0.25);
+    border-color: #fdc830;
+  }
 
   //Profile
   & > div:nth-child(2) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
   }
 
   //Contact
@@ -25,49 +35,80 @@ export const Card = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.8rem;
+    background: rgba(255, 247, 224, 0.5);
+    padding: 1rem;
+    border-radius: 12px;
   }
 
   //Contact 내부 정보
   & > div > p {
     width: 100%;
     display: flex;
-    gap: 0.5rem;
+    gap: 0.8rem;
     align-items: center;
+    font-size: 0.9rem;
+    color: #555;
+
+    svg {
+      color: #f37335;
+      width: 18px;
+      height: 18px;
+    }
   }
 
   //이름
   .name {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #333;
+    background: #f37335;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   //직급 뱃지
   .position {
-    background: ${(props) => {
-      switch (props.position) {
-        case "학회장":
-          return "var(--primary)";
-        default:
-          return "var(--secondary)";
-      }
-    }};
-    width: 360px;
-    text-align: center;
+    background: ${(props) =>
+      props.position === "학회장" ||
+      (props.position && props.position.endsWith("부장"))
+        ? "linear-gradient(135deg, #FDC830 0%, #F37335 100%)"
+        : "#F37335"};
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 1rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: 50px;
     font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    width: auto;
+    min-width: 100px;
+    text-align: center;
   }
 
-  //부서 뱃지
+  //부서
   .department {
-    color: var(--gray-90);
-    width: 360px;
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 500;
+    border: 1px solid #fdc830;
+    padding: 0.3rem 1rem;
+    border-radius: 50px;
+    background: rgba(255, 247, 224, 0.5);
+    width: auto;
+    min-width: 100px;
     text-align: center;
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--gray-70);
-    border-radius: 1rem;
-    font-weight: 400;
+  }
+
+  //소개글
+  & > p {
+    text-align: center;
+    color: #666;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 100%;
   }
 `;

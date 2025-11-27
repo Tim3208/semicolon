@@ -111,37 +111,55 @@ function CardSectionCP() {
   const heads = member.filter((m) => m.position.endsWith("부장"));
 
   return (
-    <Tabs defaultValue="leader" className="mt-16 flex flex-col justify-center">
-      <TabsList className="bg-white flex gap-2">
+    <Tabs
+      defaultValue="leader"
+      className="mt-16 flex flex-col justify-center w-full"
+    >
+      <TabsList className="bg-transparent flex gap-3 md:gap-6 flex-wrap justify-center mb-12">
         <TabsTrigger
-          className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+          className="relative overflow-hidden group w-24 md:w-32 py-2.5 rounded-full border-2 border-[#FDC830] bg-white text-[#F37335] font-bold transition-all duration-400 ease-in-out shadow-sm hover:shadow-md group-data-[state=active]:border-transparent"
           value="leader"
         >
-          임원진
+          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FDC830] to-[#F37335] opacity-0 transition-opacity duration-400 ease-in-out group-data-[state=active]:opacity-100"></span>
+          <span className="relative z-10 group-data-[state=active]:text-white">
+            임원진
+          </span>
         </TabsTrigger>
         <TabsTrigger
-          className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+          className="relative overflow-hidden group w-24 md:w-32 py-2.5 rounded-full border-2 border-[#FDC830] bg-white text-[#F37335] font-bold transition-all duration-400 ease-in-out shadow-sm hover:shadow-md group-data-[state=active]:border-transparent"
           value="planningDept"
         >
-          기획부
+          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FDC830] to-[#F37335] opacity-0 transition-opacity duration-400 ease-in-out group-data-[state=active]:opacity-100"></span>
+          <span className="relative z-10 group-data-[state=active]:text-white">
+            기획부
+          </span>
         </TabsTrigger>
         <TabsTrigger
-          className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+          className="relative overflow-hidden group w-24 md:w-32 py-2.5 rounded-full border-2 border-[#FDC830] bg-white text-[#F37335] font-bold transition-all duration-400 ease-in-out shadow-sm hover:shadow-md group-data-[state=active]:border-transparent"
           value="prDept"
         >
-          홍보부
+          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FDC830] to-[#F37335] opacity-0 transition-opacity duration-400 ease-in-out group-data-[state=active]:opacity-100"></span>
+          <span className="relative z-10 group-data-[state=active]:text-white">
+            홍보부
+          </span>
         </TabsTrigger>
         <TabsTrigger
-          className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+          className="relative overflow-hidden group w-24 md:w-32 py-2.5 rounded-full border-2 border-[#FDC830] bg-white text-[#F37335] font-bold transition-all duration-400 ease-in-out shadow-sm hover:shadow-md group-data-[state=active]:border-transparent"
           value="financeDept"
         >
-          총무부
+          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FDC830] to-[#F37335] opacity-0 transition-opacity duration-400 ease-in-out group-data-[state=active]:opacity-100"></span>
+          <span className="relative z-10 group-data-[state=active]:text-white">
+            총무부
+          </span>
         </TabsTrigger>
         <TabsTrigger
-          className="w-24 bg-orange-200 data-[state=active]:bg-orange-400"
+          className="relative overflow-hidden group w-24 md:w-32 py-2.5 rounded-full border-2 border-[#FDC830] bg-white text-[#F37335] font-bold transition-all duration-400 ease-in-out shadow-sm hover:shadow-md group-data-[state=active]:border-transparent"
           value="sportDept"
         >
-          체육부
+          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FDC830] to-[#F37335] opacity-0 transition-opacity duration-400 ease-in-out group-data-[state=active]:opacity-100"></span>
+          <span className="relative z-10 group-data-[state=active]:text-white">
+            체육부
+          </span>
         </TabsTrigger>
       </TabsList>
       <TabsContent value="leader">

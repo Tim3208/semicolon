@@ -138,7 +138,7 @@ export default function HomePage() {
               icon={<Calendar className="w-8 h-8 text-cyan-500" />}
               title="주요 일정"
               description="다가오는 학회 일정과 행사를 확인하세요."
-              items={["정기 총회 (11.30)", "동계 해커톤 (12.20)"]}
+              items={["12월 생일이벤트 (기간 미정)", "종강 총회"]}
               gradient="from-cyan-500/10 to-blue-500/10"
               border="group-hover:border-cyan-500/50"
             />
@@ -156,7 +156,7 @@ export default function HomePage() {
               icon={<Code className="w-8 h-8 text-fuchsia-500" />}
               title="진행중인 프로젝트"
               description="학회원들이 진행하고 있는 멋진 프로젝트들을 소개합니다."
-              items={["AI 챗봇 개발 (~12.31)", "웹 서비스 런칭 (~01.15)"]}
+              items={["프로젝트1 (~12.31)", "프로젝트2 (~01.15)"]}
               gradient="from-fuchsia-500/10 to-pink-500/10"
               border="group-hover:border-fuchsia-500/50"
             />

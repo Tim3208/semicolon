@@ -3,7 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, ExternalLink, Calculator } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  ExternalLink,
+  Calculator,
+  ScrollText,
+} from "lucide-react";
 import MainLayOut from "@/layout/MainLayout";
 import {
   PageContainer,
@@ -159,7 +165,8 @@ const BudgetPage = () => {
           {/* Expenditure List Section */}
           <section>
             <SectionTitle>
-              <span className="text-amber-600">📋</span> 지출 내역
+              <ScrollText className="text-amber-600" />
+              지출 내역
             </SectionTitle>
 
             <Card className="mb-4 border-amber-300 shadow-lg bg-white">
